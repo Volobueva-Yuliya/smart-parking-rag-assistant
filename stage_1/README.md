@@ -103,3 +103,17 @@ pytest stage_1/tests/
 - **RAG (Weaviate + LLM)**: Handles informational queries by retrieving relevant context and generating natural responses.
 - **SQLite**: Manages structured data for bookings, user information, and parking availability.
 - **Guardrails**: Ensures system safety and correct routing of user requests based on identified intent.
+
+### System Architecture Diagram
+```mermaid
+graph TD
+    User((User)) <--> Chatbot[Chatbot Engine]
+    Chatbot <--> Guardrails[Guardrails Layer]
+    Chatbot <--> RAG[RAG Pipeline]
+    Chatbot <--> SQLite[(SQLite Database)]
+    RAG <--> Weaviate[(Weaviate Vector DB)]
+    RAG <--> OpenAI[OpenAI GPT-4o-mini]
+    SQLite --- Users[Users Table]
+    SQLite --- Res[Reservations Table]
+    SQLite --- Park[Parking Table]
+```
