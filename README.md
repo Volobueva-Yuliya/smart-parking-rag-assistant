@@ -1,1 +1,1 @@
-# smart-parking-rag-assistent
+# smart-parking-rag-assistant

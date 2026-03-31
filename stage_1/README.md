@@ -12,7 +12,7 @@ A RAG-based chatbot designed for intelligent parking management and information 
 ## Project Structure
 
 ```text
-smart-parking-rag-assistent/
+smart-parking-rag-assistant/
 ├── stage_1/                # Main development stage
 │   ├── app/                # Application logic
 │   │   ├── chatbot.py      # Chatbot entry point
