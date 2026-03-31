@@ -1,0 +1,77 @@
+[
+  {
+    "id": 1,
+    "query": "What are the working hours?",
+    "expected_section": "FAQ"
+  },
+  {
+    "id": 2,
+    "query": "Can I park overnight?",
+    "expected_section": "FAQ"
+  },
+  {
+    "id": 3,
+    "query": "How much does parking cost?",
+    "expected_section": "FAQ"
+  },
+  {
+    "id": 4,
+    "query": "What is the hourly rate?",
+    "expected_section": "Pricing"
+  },
+  {
+    "id": 5,
+    "query": "How can I book a parking space?",
+    "expected_section": "FAQ"
+  },
+  {
+    "id": 6,
+    "query": "Is it possible to reserve a spot online?",
+    "expected_section": "FAQ"
+  },
+  {
+    "id": 7,
+    "query": "How to cancel my reservation?",
+    "expected_section": "FAQ"
+  },
+  {
+    "id": 8,
+    "query": "What is the refund policy?",
+    "expected_section": "Cancellation Policy"
+  },
+  {
+    "id": 9,
+    "query": "Where is the parking located?",
+    "expected_section": "Location"
+  },
+  {
+    "id": 10,
+    "query": "What is the address of the parking?",
+    "expected_section": "Location"
+  },
+  {
+    "id": 11,
+    "query": "Do you have EV charging stations?",
+    "expected_section": "FAQ"
+  },
+  {
+    "id": 12,
+    "query": "Are there electric vehicle charging spots?",
+    "expected_section": "Space Types"
+  },
+  {
+    "id": 13,
+    "query": "Are there accessible parking spaces?",
+    "expected_section": "Space Types"
+  },
+  {
+    "id": 14,
+    "query": "Is the parking disability friendly?",
+    "expected_section": "FAQ"
+  },
+  {
+    "id": 15,
+    "query": "What are the general rules for parking?",
+    "expected_section": "Parking Rules"
+  }
+]
