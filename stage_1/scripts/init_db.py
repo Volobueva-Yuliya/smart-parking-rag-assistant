@@ -1,9 +1,15 @@
 import os
 import sqlite3
+from pathlib import Path
 
-DB_NAME = os.getenv("DB_NAME", "parking.db")
+# Shared DB strategy: by default, we use a single parking.db at the repository root level.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+DEFAULT_DB_PATH = str(PROJECT_ROOT / "parking.db")
+
+DB_NAME = os.getenv("DB_NAME", DEFAULT_DB_PATH)
 
 def init_db():
+    print(f"Initializing database: {DB_NAME}")
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 

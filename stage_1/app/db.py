@@ -1,8 +1,14 @@
 import os
 import sqlite3
+from pathlib import Path
 from datetime import datetime
 
-DB_NAME = os.getenv("DB_NAME", "parking.db")
+# Shared DB strategy: by default, we use a single parking.db at the repository root level.
+# This ensures that both stage_1 and stage_2 access the same data consistently.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+DEFAULT_DB_PATH = str(PROJECT_ROOT / "parking.db")
+
+DB_NAME = os.getenv("DB_NAME", DEFAULT_DB_PATH)
 
 def get_connection():
     """Returns a connection to the SQLite database."""
