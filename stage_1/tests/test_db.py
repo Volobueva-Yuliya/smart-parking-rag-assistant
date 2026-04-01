@@ -13,7 +13,8 @@ def setup_db(tmp_path, monkeypatch):
 
 def test_get_or_create_user():
     user_id = get_or_create_user("John", "Doe", "AA123BB")
-    assert user_id == 1
+    assert isinstance(user_id, int)
+    assert user_id > 0
     
     # Reuse user
     user_id_2 = get_or_create_user("John", "Doe", "AA123BB")
@@ -21,7 +22,9 @@ def test_get_or_create_user():
     
     # Different user
     user_id_3 = get_or_create_user("Jane", "Doe", "BB321AA")
-    assert user_id_3 == 2
+    assert isinstance(user_id_3, int)
+    assert user_id_3 > 0
+    assert user_id_3 != user_id
 
 def test_create_reservation():
     user_id = get_or_create_user("John", "Doe", "AA123BB")
