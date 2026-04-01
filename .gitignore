@@ -9,6 +9,7 @@ env/
 # SQLite
 *.db
 *.sqlite
+!smart-parking-rag-assistent/stage_1/data/retrieval_eval_dataset.json
 
 # OS
 .DS_Store
@@ -16,3 +17,8 @@ env/
 # IDE
 .idea/
 .vscode/
+
+# Project-specific temporary files
+.pytest_cache/
+test.ipynb
+*.log
