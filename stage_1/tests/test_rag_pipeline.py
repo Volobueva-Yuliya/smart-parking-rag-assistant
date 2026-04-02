@@ -1,11 +1,11 @@
 import pytest
 from unittest.mock import MagicMock, patch
-from app.rag_pipeline import run_rag_pipeline
+from stage_1.app.rag_pipeline import run_rag_pipeline
 
-@patch("app.rag_pipeline.weaviate.connect_to_local")
-@patch("app.rag_pipeline.get_embedding")
-@patch("app.rag_pipeline.ChatOpenAI")
-@patch("app.rag_pipeline.ChatPromptTemplate")
+@patch("stage_1.app.rag_pipeline.weaviate.connect_to_local")
+@patch("stage_1.app.rag_pipeline.get_embedding")
+@patch("stage_1.app.rag_pipeline.ChatOpenAI")
+@patch("stage_1.app.rag_pipeline.ChatPromptTemplate")
 def test_run_rag_pipeline(mock_prompt_class, mock_llm_class, mock_get_emb, mock_weaviate, monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     
@@ -40,8 +40,8 @@ def test_run_rag_pipeline(mock_prompt_class, mock_llm_class, mock_get_emb, mock_
     mock_weaviate.assert_called_once()
     mock_chain.invoke.assert_called_once()
 
-@patch("app.rag_pipeline.weaviate.connect_to_local")
-@patch("app.rag_pipeline.get_embedding")
+@patch("stage_1.app.rag_pipeline.weaviate.connect_to_local")
+@patch("stage_1.app.rag_pipeline.get_embedding")
 def test_run_rag_pipeline_no_results(mock_get_emb, mock_weaviate, monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     

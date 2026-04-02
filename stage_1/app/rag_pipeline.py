@@ -3,7 +3,7 @@ import weaviate
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
-from app.embeddings import get_embedding, MODEL_NAME
+from stage_1.app.embeddings import get_embedding, MODEL_NAME
 
 load_dotenv()
 
