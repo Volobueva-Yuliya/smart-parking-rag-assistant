@@ -7,6 +7,7 @@ This documentation covers **Stage 2** of the smart parking assistant project, wh
 The goal of Stage 2 is to move beyond simple data collection and implement a formal approval process for parking reservations. 
 - **Human-in-the-loop workflow**: Reservations are not finalized immediately but require administrative review and decision.
 - **Second Admin Agent**: A dedicated administrative agent built using **LangChain** concepts is introduced to handle approvals and rejections via specialized tools.
+- **Shared Database**: Stage 2 operates on the same SQLite database (`parking.db`) initialized in Stage 1, extending it with approval-specific fields.
 
 ## Key Features
 
@@ -15,6 +16,28 @@ The goal of Stage 2 is to move beyond simple data collection and implement a for
 - **LangChain-based Admin Agent**: An administrative agent using `@tool` decorated functions to interact with the database and process decisions.
 - **Integration with Booking Flow**: The user-facing booking process automatically submits requests for administrative review upon user confirmation.
 - **Shared SQLite Database**: A unified `parking.db` located at the project root, shared between Stage 1 and Stage 2 modules.
+
+## Database Setup
+
+Stage 2 uses the shared SQLite database located at the repository root: `parking.db`. While Stage 1 initializes the base schema, Stage 2 extends the `reservations` table with approval-related columns.
+
+### Setup Sequence
+
+1. **Initialize Base Schema** (from Stage 1):
+   ```bash
+   python3 -m stage_1.scripts.init_db
+   ```
+
+2. **Extend Schema for Stage 2**:
+   Stage 2 requires additional columns for the approval workflow: `updated_at`, `admin_decision_at`, and `admin_comment`. These are added dynamically if they do not exist.
+   
+   Run this Python snippet to ensure the schema is up to date:
+   ```python
+   from stage_2.db import ensure_stage_2_columns
+   ensure_stage_2_columns()
+   ```
+
+> **Note**: Adding missing columns to an existing SQLite table is the expected lightweight schema extension method for this stage.
 
 ## Project Structure (Stage 2)
 
@@ -55,14 +78,12 @@ smart-parking-rag-assistant/
 ### Start Admin API
 Ensure your `PYTHONPATH` includes the project root:
 ```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistent
 python3 -m uvicorn stage_2.admin_api:app --reload
 ```
 
 ### Run Stage 2 Tests
 ```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistent
-python3 -m pytest smart-parking-rag-assistent/stage_2/tests/ -q
+python3 -m pytest stage_2/tests/ -q
 ```
 
 ## Example Flow
@@ -71,9 +92,3 @@ python3 -m pytest smart-parking-rag-assistent/stage_2/tests/ -q
 2. **Pending**: Reservation `R-20260401-001` created as `pending_admin_approval`.
 3. **Approval**: Admin calls API `POST /admin/reservation/R-20260401-001/decision` with `{"decision": "approved", "comment": "Spot confirmed"}`.
 4. **Status Check**: User checks status and receives: "Great news! Your reservation has been approved. Admin note: Spot confirmed".
-
-## Limitations
-
-- **REST/Stub Integration**: The current admin notification is a stub and requires manual API/Agent calls for decisions.
-- **No External Messaging**: Real notifications (Email/SMS) are not yet integrated.
-- **Tool-based Agent**: The Admin Agent uses tools for execution but does not yet implement a full autonomous reasoning loop (LLM agent).
