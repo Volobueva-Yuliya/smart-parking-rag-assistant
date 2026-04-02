@@ -1,5 +1,5 @@
 import pytest
-from app.guardrails import classify_intent, is_greeting, is_out_of_scope, is_sensitive_request
+from stage_1.app.guardrails import classify_intent, is_greeting, is_out_of_scope, is_sensitive_request
 
 def test_is_greeting():
     assert is_greeting("hi") is True

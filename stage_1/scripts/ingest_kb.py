@@ -1,7 +1,7 @@
 import weaviate
 import re
 import logging
-from app.embeddings import get_embedding, MODEL_NAME
+from stage_1.app.embeddings import get_embedding, MODEL_NAME
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')

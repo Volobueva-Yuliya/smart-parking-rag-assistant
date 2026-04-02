@@ -1,8 +1,8 @@
 import os
 import sqlite3
 import pytest
-from app.db import get_or_create_user, create_reservation, get_reservation_status, get_parking_availability
-from scripts.init_db import init_db
+from stage_1.app.db import get_or_create_user, create_reservation, get_reservation_status, get_parking_availability
+from stage_1.scripts.init_db import init_db
 
 @pytest.fixture(autouse=True)
 def setup_db(tmp_path, monkeypatch):

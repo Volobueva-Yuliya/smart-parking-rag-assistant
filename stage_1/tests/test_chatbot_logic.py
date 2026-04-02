@@ -1,6 +1,6 @@
 import pytest
 from datetime import datetime, timedelta
-from app.chatbot import validate_name, validate_car_number, validate_datetime, validate_times, BookingState
+from stage_1.app.chatbot import validate_name, validate_car_number, validate_datetime, validate_times, BookingState
 
 def test_validate_name():
     assert validate_name("John")[0] is True
