@@ -58,20 +58,33 @@ The RAG pipeline requires a running Weaviate instance. Ensure Weaviate is runnin
 docker-compose -f stage_1/docker-compose.yml up -d
 ```
 
-### 4. Data Initialization
-Execute the following scripts in order to set up the databases and vector storage:
+### 4. Database Setup
+Stage 1 uses a shared SQLite database located at the repository root: `parking.db`. This database initializes the base schema which is shared across all project stages.
+
+The following base tables are created:
+- `users`: User profiles and contact information.
+- `reservations`: Parking booking records.
+- `parking`: Static parking lot details and availability.
+
+To initialize the database, run:
+```bash
+python3 -m stage_1.scripts.init_db
+```
+
+To verify the setup, you can check the created tables:
+```bash
+sqlite3 parking.db ".tables"
+```
+
+### 5. Data Initialization (Weaviate)
+Execute the following scripts to set up the vector storage for the RAG pipeline:
 
 ```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/stage_1
+# 1. Create Weaviate collection
+python3 -m stage_1.scripts.create_collection
 
-# 1. Initialize SQLite database
-python3 stage_1/scripts/init_db.py
-
-# 2. Create Weaviate collection
-python3 stage_1/scripts/create_collection.py
-
-# 3. Ingest knowledge base into Weaviate
-python3 stage_1/scripts/ingest_kb.py
+# 2. Ingest knowledge base into Weaviate
+python3 -m stage_1.scripts.ingest_kb
 ```
 
 ## Usage
@@ -79,8 +92,7 @@ python3 stage_1/scripts/ingest_kb.py
 Run the chatbot in console mode:
 
 ```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/stage_1
-python3 stage_1/app/chatbot.py
+python3 -m stage_1.app.chatbot
 ```
 
 ### Interaction Examples:
@@ -95,7 +107,7 @@ The test suite ensures the reliability of the core components, including guardra
 Run tests using `pytest`:
 
 ```bash
-pytest stage_1/tests/
+python3 -m pytest stage_1/tests/
 ```
 
 ## Architecture Overview
