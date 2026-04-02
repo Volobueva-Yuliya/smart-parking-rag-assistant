@@ -1,7 +1,7 @@
 import json
 import time
 import weaviate
-from app.embeddings import get_embedding
+from stage_1.app.embeddings import get_embedding
 
 def evaluate_retrieval(dataset_path: str, top_k: int = 3):
     """

@@ -2,11 +2,11 @@ import os
 import sys
 import re
 from datetime import datetime
-from app.rag_pipeline import run_rag_pipeline
-from app.embeddings import get_embedding_model, get_embedding
-from app.db import create_user, create_reservation, get_parking, get_reservation_status, get_parking_availability, get_or_create_user
+from stage_1.app.rag_pipeline import run_rag_pipeline
+from stage_1.app.embeddings import get_embedding_model, get_embedding
+from stage_1.app.db import create_user, create_reservation, get_parking, get_reservation_status, get_parking_availability, get_or_create_user
 from dotenv import load_dotenv
-from app.guardrails import classify_intent
+from stage_1.app.guardrails import classify_intent
 
 load_dotenv()
 
