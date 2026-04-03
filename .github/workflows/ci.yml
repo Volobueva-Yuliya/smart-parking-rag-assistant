@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install fastapi pydantic uvicorn pytest httpx sqlite3 langchain-core
+        # If requirements.txt exists in root, use it
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Initialize Database
+      run: |
+        python -m stage_1.scripts.init_db
+        
+    - name: Run Stage 1 Tests
+      run: |
+        export PYTHONPATH=$PYTHONPATH:$(pwd)
+        python -m pytest stage_1/tests/
+        
+    - name: Run Stage 2 Tests
+      run: |
+        export PYTHONPATH=$PYTHONPATH:$(pwd)
+        python -m pytest stage_2/tests/
+        
+    - name: Run Stage 3 Tests
+      run: |
+        export PYTHONPATH=$PYTHONPATH:$(pwd)
+        python -m pytest stage_3/tests/
