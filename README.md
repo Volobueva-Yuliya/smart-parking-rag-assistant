@@ -1,12 +1,13 @@
 # Smart Parking RAG Assistant
 
-A smart parking chatbot project that combines Retrieval-Augmented Generation (RAG) for information support with an automated booking workflow and human-in-the-loop administrative approval.
+A smart parking chatbot project that combines Retrieval-Augmented Generation (RAG) for information support with an automated booking workflow, human-in-the-loop administrative approval, and a finalized reservation processing service.
 
 ## Project Overview
 
 This project implements a multi-stage intelligent parking assistant:
 - **Stage 1** covers RAG-based information support (answering questions about parking rules, prices, etc.) and collecting all necessary booking details from users.
 - **Stage 2** adds a human-in-the-loop reservation approval workflow, featuring a second administrative agent built using LangChain concepts.
+- **Stage 3** introduces a lightweight MCP-style processing server that exports confirmed reservations to a persistent text ledger.
 
 ## Features
 
@@ -16,7 +17,8 @@ This project implements a multi-stage intelligent parking assistant:
 - **Reservation Approval Lifecycle**: Support for `pending_admin_approval`, `approved`, and `rejected` statuses.
 - **Admin REST API**: A FastAPI-based service for administrators to review and decide on reservation requests.
 - **Second LangChain-based Admin Agent**: A dedicated agent using LangChain tools (`@tool`) to process administrative decisions.
-- **Automated Tests**: A robust test suite using `pytest` covering database operations, business logic, and chatbot flows.
+- **MCP-style Processing Server**: A FastAPI-based service for downstream processing and persistent storage of approved reservations.
+- **Automated Tests**: A robust test suite using `pytest` covering all three stages, including database operations, business logic, and API flows.
 
 ## Project Structure
 
@@ -33,6 +35,10 @@ This project implements a multi-stage intelligent parking assistant:
   - `admin_agent.py`: LangChain-based second agent for processing decisions.
   - `chatbot_flow.py`: User-facing interaction logic for Stage 2 (confirmation and status checks).
   - `tests/`: Unit and integration tests for Stage 2.
+- **`stage_3/`**: Contains the lightweight MCP-style processing server.
+  - `app/`: FastAPI server, authentication, and file-writing logic.
+  - `storage/`: Persistent storage for confirmed reservations and export state.
+  - `tests/`: Unit, smoke, and synchronization tests for Stage 3.
 
 ## Stage 1
 
@@ -51,6 +57,14 @@ Stage 2 introduced the administrative layer:
 - **Admin API**: RESTful endpoints for fetching reservations and submitting decisions.
 - **Admin Agent**: A second agent using LangChain tools to manage approvals and rejections.
 
+## Stage 3
+
+Stage 3 finalized the downstream flow:
+- **MCP-style Server**: A FastAPI service acting as a confirmed reservation processor.
+- **Bearer Token Auth**: Secure API endpoints for manual and automated synchronization.
+- **Export Logic**: Formatting and appending approved reservations to a persistent text ledger.
+- **Idempotent Sync**: Local state tracking to prevent duplicate exports from the shared SQLite database.
+
 ## Reservation Workflow
 
 1. **User Submits Reservation**: User provides all required booking fields to the chatbot.
@@ -58,7 +72,8 @@ Stage 2 introduced the administrative layer:
 3. **Pending Status**: Once confirmed, a reservation is created in the DB with status `pending_admin_approval`.
 4. **Admin Review**: The request is automatically forwarded for administrative review (simulated via `admin_client`).
 5. **Approve/Reject**: Administrator uses the Admin API or Admin Agent to approve or reject the request, optionally adding a comment.
-6. **User Checks Status**: User can query the status of their reservation using their unique code.
+6. **Processing (Stage 3)**: The Stage 3 server synchronizes approved records into the finalized text ledger.
+7. **User Checks Status**: User can query the status of their reservation using their unique code.
 
 ## Setup
 
@@ -95,28 +110,34 @@ python3 smart-parking-rag-assistent/stage_1/app/chatbot.py
 
 ### Running Stage 2 Admin API
 ```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistent
 python3 -m uvicorn stage_2.admin_api:app --reload
+```
+
+### Running Stage 3 Processing Server
+```bash
+python3 -m uvicorn stage_3.app.mcp_server:app --port 8001 --reload
 ```
 
 ### Running Tests
 
-**Only Stage 1 tests:**
+**Stage 1 tests:**
 ```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistent
-python3 -m pytest smart-parking-rag-assistent/stage_1/tests/
+python3 -m pytest stage_1/tests/
 ```
 
-**Only Stage 2 tests:**
+**Stage 2 tests:**
 ```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistent
-python3 -m pytest smart-parking-rag-assistent/stage_2/tests/
+python3 -m pytest stage_2/tests/
+```
+
+**Stage 3 tests:**
+```bash
+python3 -m pytest stage_3/tests/
 ```
 
 **All tests:**
 ```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistent
-python3 -m pytest smart-parking-rag-assistent/stage_1/tests/ smart-parking-rag-assistent/stage_2/tests/
+python3 -m pytest stage_1/tests/ stage_2/tests/ stage_3/tests/
 ```
 
 ## Testing
@@ -127,3 +148,4 @@ The project uses **pytest** for automated verification. The test suite covers:
 - **Booking logic**: Completeness validation and summary generation.
 - **RAG pipeline behavior**: Correct retrieval and generation flows.
 - **Admin workflow**: End-to-end integration from submission to decision.
+- **Processing and Sync**: Secure export of approved records and duplicate prevention in Stage 3.
