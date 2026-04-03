@@ -1,11 +1,48 @@
 from fastapi import FastAPI, HTTPException, Body, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, HTMLResponse
 from pydantic import BaseModel, Field, validator
 from typing import Optional
 import sqlite3
 from stage_2.db import get_reservation_by_code, update_reservation_status
 
 app = FastAPI(title="Admin Reservation API", description="Minimal API for parking reservation approvals")
+
+@app.get("/", response_class=HTMLResponse)
+async def root():
+    """
+    Returns a clean HTML landing page for the Admin API.
+    """
+    return """
+    <html>
+        <head>
+            <title>Stage 2 Admin API</title>
+            <style>
+                body { font-family: sans-serif; line-height: 1.6; margin: 40px; color: #333; }
+                h1 { color: #2c3e50; }
+                .status { color: #27ae60; font-weight: bold; }
+                a { color: #3498db; text-decoration: none; }
+                a:hover { text-decoration: underline; }
+                code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
+            </style>
+        </head>
+        <body>
+            <h1>Stage 2 Admin API</h1>
+            <p>Welcome to the <strong>Smart Parking Assistant</strong> Administrative Interface.</p>
+            <p>Service Status: <span class="status">Running</span></p>
+            <hr>
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="/docs">Interactive API Documentation (Swagger UI)</a></li>
+                <li><a href="/redoc">API Reference (ReDoc)</a></li>
+            </ul>
+            <h3>Key Endpoints</h3>
+            <ul>
+                <li><code>GET /admin/reservation/{code}</code> - View reservation details</li>
+                <li><code>POST /admin/reservation/{code}/decision</code> - Approve or Reject a reservation</li>
+            </ul>
+        </body>
+    </html>
+    """
 
 # Pydantic models for request/response validation
 class DecisionRequest(BaseModel):
