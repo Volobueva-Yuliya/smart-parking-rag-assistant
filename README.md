@@ -5,6 +5,7 @@ A smart parking chatbot project that combines Retrieval-Augmented Generation (RA
 ## Project Overview
 
 This project implements a multi-stage intelligent parking assistant:
+![integration_map.png](../../../Downloads/integration_map.png)
 - **Stage 1** covers RAG-based information support (answering questions about parking rules, prices, etc.) and collecting all necessary booking details from users.
 - **Stage 2** adds a human-in-the-loop reservation approval workflow, featuring a second administrative agent built using LangChain concepts.
 - **Stage 3** introduces a lightweight MCP-style processing server that exports confirmed reservations to a persistent text ledger.
