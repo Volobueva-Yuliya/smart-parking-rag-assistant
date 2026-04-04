@@ -3,7 +3,7 @@
 A smart parking chatbot project that combines Retrieval-Augmented Generation (RAG) for information support with an automated booking workflow, human-in-the-loop administrative approval, and a finalized reservation processing service.
 
 ## Project Overview
-![full_system.png](image/full_system.png)
+![full_system.png](image/full_system.png)  
 This project implements a multi-stage intelligent parking assistant:
 - **Stage 1** covers RAG-based information support (answering questions about parking rules, prices, etc.) and collecting all necessary booking details from users.
 - **Stage 2** adds a human-in-the-loop reservation approval workflow, featuring a second administrative agent built using LangChain concepts.
@@ -31,7 +31,7 @@ This project implements a multi-stage intelligent parking assistant:
 - **`stage_4/`**: LangGraph orchestration layer and end-to-end validation.
 
 ## Stage 4: Orchestration (Final Integration)
-![integration_map.png](image/integration_map.png)
+![integration_map.png](image/integration_map.png)  
 Stage 4 unifies the project using LangGraph:
 - **Stateful Workflow**: Manages transitions between user interaction, approval, and recording.
 - **Real-world Integration**: Directly invokes logic from Stages 1, 2, and 3.
