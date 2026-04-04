@@ -82,7 +82,10 @@ def test_sync_reads_approved_ignoring_others():
     with open(TEST_CONFIRMED, 'r') as f:
         lines = f.readlines()
         assert len(lines) == 1
+        # Required format: Name | Car Number | Reservation Period | Approval Time
         assert "John Doe | CAR-123 | 2026-04-02T10:00:00 to 2026-04-02T12:00:00 | 2026-04-02T09:00:00" in lines[0]
+        # Negative assertion: reservation_code should NOT be in the file line
+        assert "R-APP-001" not in lines[0]
 
 def test_sync_skips_already_exported():
     conn = sqlite3.connect(TEST_DB)
@@ -128,9 +131,11 @@ def test_sync_skips_already_exported():
         lines = f.readlines()
         assert len(lines) == 2
         assert "John Doe" in lines[0]
-        assert "R-OLD-001" not in lines[0] # R-OLD-001 is NOT in the formatted line based on stage_3/app/service.py:15
-        assert "R-NEW-002" not in lines[1]
         assert "CAR-123" in lines[1]
+        
+        # Verify that reservation_code is NOT in the file lines
+        assert "R-OLD-001" not in lines[0]
+        assert "R-NEW-002" not in lines[1]
 
 def test_sync_state_persistence():
     conn = sqlite3.connect(TEST_DB)

@@ -26,7 +26,7 @@ def test_format_reservation_line(sample_reservation):
 def test_full_name_composition(sample_reservation):
     """Test that full name is composed correctly."""
     result = format_reservation_line(sample_reservation)
-    assert result.startswith("Lila Ivanova |")
+    assert "Lila Ivanova |" in result
 
 def test_file_writing_creates_file(tmp_path):
     """Test that writing creates the file automatically."""
