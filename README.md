@@ -63,24 +63,62 @@ Stage 2 introduced the administrative layer:
 ## Setup
 
 ### 1. Virtual Environment
+
+**macOS / Linux**
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
+**Windows (PowerShell)**
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+**Windows (Command Prompt)**
+
+```cmd
+python -m venv .venv
+.\.venv\Scripts\activate.bat
+```
+
 ### 2. Dependency Installation
+
+**macOS / Linux**
+
 ```bash
-pip install -r smart-parking-rag-assistent/stage_1/requirements.txt
+pip install -r smart-parking-rag-assistant/stage_1/requirements.txt
+pip install fastapi uvicorn pydantic langchain-core langchain-openai
+```
+
+**Windows**
+
+```powershell
+pip install -r smart-parking-rag-assistant\stage_1\requirements.txt
 pip install fastapi uvicorn pydantic langchain-core langchain-openai
 ```
 
 ### 3. Database Initialization
+
+**macOS / Linux**
+
 ```bash
-python3 smart-parking-rag-assistent/stage_1/scripts/init_db.py
+python3 smart-parking-rag-assistant/stage_1/scripts/init_db.py
+```
+
+**Windows**
+
+```powershell
+python smart-parking-rag-assistant\stage_1\scripts\init_db.py
 ```
 
 ### 4. Environment Variables
+
 Ensure a `.env` file exists in the repository root with the following keys:
+
 ```text
 OPENAI_API_KEY=your_openai_key
 WEAVIATE_URL=your_weaviate_url
@@ -89,41 +127,81 @@ WEAVIATE_URL=your_weaviate_url
 ## Running the Project
 
 ### Running Stage 1 Chatbot
+
+**macOS / Linux**
+
 ```bash
-python3 smart-parking-rag-assistent/stage_1/app/chatbot.py
+python3 smart-parking-rag-assistant/stage_1/app/chatbot.py
+```
+
+**Windows**
+
+```powershell
+python smart-parking-rag-assistant\stage_1\app\chatbot.py
 ```
 
 ### Running Stage 2 Admin API
+
+**macOS / Linux**
+
 ```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistent
+export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistant
 python3 -m uvicorn stage_2.admin_api:app --reload
 ```
 
-### Running Tests
+**Windows (PowerShell)**
 
-**Only Stage 1 tests:**
-```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistent
-python3 -m pytest smart-parking-rag-assistent/stage_1/tests/
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python -m uvicorn stage_2.admin_api:app --reload
 ```
 
-**Only Stage 2 tests:**
+## Running Tests
+
+### Only Stage 1 tests
+
+**macOS / Linux**
+
 ```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistent
-python3 -m pytest smart-parking-rag-assistent/stage_2/tests/
+export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistant
+python3 -m pytest smart-parking-rag-assistant/stage_1/tests/
 ```
 
-**All tests:**
-```bash
-export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistent
-python3 -m pytest smart-parking-rag-assistent/stage_1/tests/ smart-parking-rag-assistent/stage_2/tests/
+**Windows**
+
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python -m pytest smart-parking-rag-assistant\stage_1\tests\
 ```
 
-## Testing
+### Only Stage 2 tests
 
-The project uses **pytest** for automated verification. The test suite covers:
-- **Database operations**: Schema extensions and status transitions.
-- **Guardrails**: Safety filtering and intent routing.
-- **Booking logic**: Completeness validation and summary generation.
-- **RAG pipeline behavior**: Correct retrieval and generation flows.
-- **Admin workflow**: End-to-end integration from submission to decision.
+**macOS / Linux**
+
+```bash
+export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistant
+python3 -m pytest smart-parking-rag-assistant/stage_2/tests/
+```
+
+**Windows**
+
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python -m pytest smart-parking-rag-assistant\stage_2\tests\
+```
+
+### All tests
+
+**macOS / Linux**
+
+```bash
+export PYTHONPATH=$PYTHONPATH:$(pwd)/smart-parking-rag-assistant
+python3 -m pytest smart-parking-rag-assistant/stage_1/tests/ smart-parking-rag-assistant/stage_2/tests/
+```
+
+**Windows**
+
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python -m pytest smart-parking-rag-assistant\stage_1\tests\ smart-parking-rag-assistant\stage_2\tests\
+```
