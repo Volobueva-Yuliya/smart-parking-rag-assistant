@@ -5,6 +5,7 @@ This module provides a lightweight, FastAPI-based processing server for handling
 ## Overview
 
 Stage 3 focuses on the downstream processing of reservations after they have been approved by the administrative team in Stage 2. It acts as an independent processing layer that:
+
 - Receives or synchronizes approved reservation data.
 - Formats the data according to the required external storage format.
 - Persists the records into a finalized text-based ledger.
@@ -13,6 +14,7 @@ Stage 3 focuses on the downstream processing of reservations after they have bee
 ## Architecture and Responsibility
 
 Stage 3 is designed as a standalone consumer of the parking system, implementing a "human-in-the-loop" to "confirmed-storage" transition:
+
 - **MCP-style Architecture**: Implemented as a clean, tool-like service (Python + FastAPI) that can be easily integrated into larger orchestration flows.
 - **Separation of Concerns**: Stage 3 logic is completely isolated from the Stage 2 approval process. It observes the shared state and acts upon it.
 - **Shared Database Strategy**: Instead of Stage 2 pushing data to Stage 3, Stage 3 independently pulls data from the shared `parking.db`. This keeps the administrative logic clean and allows Stage 3 to be run as an independent background process or a triggered service.
@@ -48,39 +50,80 @@ stage_3/
 ## Export Format
 
 Every confirmed reservation is appended to the output file as a single line in the following format:
-`Full Name | Car Number | Reservation Period | Approval Time`
 
-**Example:**
-`Lila Ivanova | SDS-100 | 2026-04-02T10:00:00 to 2026-04-02T18:00:00 | 2026-04-02T09:45:10`
+```text
+Full Name | Car Number | Reservation Period | Approval Time
+```
+
+Example:
+
+```text
+Lila Ivanova | SDS-100 | 2026-04-02T10:00:00 to 2026-04-02T18:00:00 | 2026-04-02T09:45:10
+```
 
 ## Setup and Installation
 
-1. **Install Dependencies**:
-   ```bash
-   pip install -r stage_3/requirements.txt
-   ```
+### 1. Install Dependencies
 
-2. **Environment Variables**:
-   - `DB_NAME`: Path to the shared SQLite database (default: `parking.db` at repo root).
-   - `CONFIRMED_FILE_PATH`: Path to the output ledger (default: `stage_3/storage/confirmed_reservations.txt`).
-   - `EXPORT_STATE_FILE_PATH`: Path to the tracking file (default: `stage_3/storage/export_state.json`).
-   - `STAGE_3_API_TOKEN`: Secret Bearer token for authentication (default: `default_secret_token`).
+**macOS / Linux**
+
+```bash
+pip install -r stage_3/requirements.txt
+```
+
+**Windows**
+
+```powershell
+pip install -r stage_3\requirements.txt
+```
+
+### 2. Environment Variables
+
+Configure the following environment variables:
+
+| Variable | Description | Default |
+| :--- | :--- | :--- |
+| `DB_NAME` | Path to the shared SQLite database | `parking.db` |
+| `CONFIRMED_FILE_PATH` | Path to the output ledger | `stage_3/storage/confirmed_reservations.txt` |
+| `EXPORT_STATE_FILE_PATH` | Path to the tracking file | `stage_3/storage/export_state.json` |
+| `STAGE_3_API_TOKEN` | Secret Bearer token for authentication | `default_secret_token` |
 
 ## Running the Server
 
-Start the FastAPI server from the project root:
+Start the FastAPI server from the project root.
+
+**macOS / Linux**
+
 ```bash
 python3 -m uvicorn stage_3.app.mcp_server:app --host 0.0.0.0 --port 8001 --reload
+```
+
+**Windows**
+
+```powershell
+python -m uvicorn stage_3.app.mcp_server:app --host 0.0.0.0 --port 8001 --reload
 ```
 
 ## API Validation Examples
 
 ### 1. Health Check
+
+**macOS / Linux**
+
 ```bash
 curl http://localhost:8001/health
 ```
 
+**Windows PowerShell**
+
+```powershell
+curl.exe http://localhost:8001/health
+```
+
 ### 2. Manual Confirmation (Direct)
+
+**macOS / Linux**
+
 ```bash
 curl -X POST http://localhost:8001/confirm \
      -H "Authorization: Bearer default_secret_token" \
@@ -96,13 +139,41 @@ curl -X POST http://localhost:8001/confirm \
          }'
 ```
 
+**Windows PowerShell**
+
+```powershell
+curl.exe -X POST http://localhost:8001/confirm `
+     -H "Authorization: Bearer default_secret_token" `
+     -H "Content-Type: application/json" `
+     -d '{
+           "reservation_code": "R-MANUAL-001",
+           "first_name": "Lila",
+           "last_name": "Ivanova",
+           "car_number": "SDS-100",
+           "start_time": "2026-04-02T10:00:00",
+           "end_time": "2026-04-02T18:00:00",
+           "approval_time": "2026-04-02T09:45:10"
+         }'
+```
+
 ### 3. Synchronization (from SQLite)
+
+**macOS / Linux**
+
 ```bash
 curl -X POST http://localhost:8001/sync-confirmed \
      -H "Authorization: Bearer default_secret_token"
 ```
 
-Expected Sync Response:
+**Windows PowerShell**
+
+```powershell
+curl.exe -X POST http://localhost:8001/sync-confirmed `
+     -H "Authorization: Bearer default_secret_token"
+```
+
+Expected sync response:
+
 ```json
 {
   "success": true,
@@ -116,14 +187,25 @@ Expected Sync Response:
 
 ## Testing
 
-Run all automated tests (unit, integration, and sync):
+Run all automated tests: unit, integration, and sync.
+
+**macOS / Linux**
+
 ```bash
 export PYTHONPATH=$(pwd)
 python3 -m pytest stage_3/tests/
 ```
 
-### Test Coverage Highlights:
+**Windows PowerShell**
+
+```powershell
+$env:PYTHONPATH = (Get-Location).Path
+python -m pytest stage_3/tests/
+```
+
+## Test Coverage Highlights
+
 - **Idempotency**: Verified that repeated sync calls do not result in duplicate ledger entries.
 - **Authentication**: Verified that `/confirm` and `/sync-confirmed` correctly enforce Bearer token rules.
 - **Data Integrity**: Verified correct formatting of the output text lines.
-- **DB Interaction**: Verified that only `approved` records are fetched and processed.
+- **DB Interaction**: Verified that only approved records are fetched and processed.
