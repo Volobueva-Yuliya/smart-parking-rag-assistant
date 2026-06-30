@@ -78,24 +78,62 @@ Stage 3 finalized the downstream flow:
 ## Setup
 
 ### 1. Virtual Environment
+
+**macOS / Linux**
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
+**Windows (PowerShell)**
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+**Windows (Command Prompt)**
+
+```cmd
+python -m venv .venv
+.\.venv\Scripts\activate.bat
+```
+
 ### 2. Dependency Installation
+
+**macOS / Linux**
+
 ```bash
-pip install -r smart-parking-rag-assistent/stage_1/requirements.txt
+pip install -r smart-parking-rag-assistant/stage_1/requirements.txt
+pip install fastapi uvicorn pydantic langchain-core langchain-openai
+```
+
+**Windows**
+
+```powershell
+pip install -r smart-parking-rag-assistant\stage_1\requirements.txt
 pip install fastapi uvicorn pydantic langchain-core langchain-openai
 ```
 
 ### 3. Database Initialization
+
+**macOS / Linux**
+
 ```bash
-python3 smart-parking-rag-assistent/stage_1/scripts/init_db.py
+python3 smart-parking-rag-assistant/stage_1/scripts/init_db.py
+```
+
+**Windows**
+
+```powershell
+python smart-parking-rag-assistant\stage_1\scripts\init_db.py
 ```
 
 ### 4. Environment Variables
+
 Ensure a `.env` file exists in the repository root with the following keys:
+
 ```text
 OPENAI_API_KEY=your_openai_key
 WEAVIATE_URL=your_weaviate_url
@@ -104,48 +142,101 @@ WEAVIATE_URL=your_weaviate_url
 ## Running the Project
 
 ### Running Stage 1 Chatbot
+
+**macOS / Linux**
+
 ```bash
-python3 smart-parking-rag-assistent/stage_1/app/chatbot.py
+python3 smart-parking-rag-assistant/stage_1/app/chatbot.py
+```
+
+**Windows**
+
+```powershell
+python smart-parking-rag-assistant\stage_1\app\chatbot.py
 ```
 
 ### Running Stage 2 Admin API
+
+**macOS / Linux**
+
 ```bash
 python3 -m uvicorn stage_2.admin_api:app --reload
 ```
 
+**Windows**
+
+```powershell
+python -m uvicorn stage_2.admin_api:app --reload
+```
+
 ### Running Stage 3 Processing Server
+
+**macOS / Linux**
+
 ```bash
 python3 -m uvicorn stage_3.app.mcp_server:app --port 8001 --reload
 ```
 
-### Running Tests
+**Windows**
 
-**Stage 1 tests:**
+```powershell
+python -m uvicorn stage_3.app.mcp_server:app --port 8001 --reload
+```
+
+## Running Tests
+
+### Stage 1 tests
+
+**macOS / Linux**
+
 ```bash
 python3 -m pytest stage_1/tests/
 ```
 
-**Stage 2 tests:**
+**Windows**
+
+```powershell
+python -m pytest stage_1/tests/
+```
+
+### Stage 2 tests
+
+**macOS / Linux**
+
 ```bash
 python3 -m pytest stage_2/tests/
 ```
 
-**Stage 3 tests:**
+**Windows**
+
+```powershell
+python -m pytest stage_2/tests/
+```
+
+### Stage 3 tests
+
+**macOS / Linux**
+
 ```bash
 python3 -m pytest stage_3/tests/
 ```
 
-**All tests:**
+**Windows**
+
+```powershell
+python -m pytest stage_3/tests/
+```
+
+### All tests
+
+**macOS / Linux**
+
 ```bash
 python3 -m pytest stage_1/tests/ stage_2/tests/ stage_3/tests/
 ```
 
-## Testing
+**Windows**
 
-The project uses **pytest** for automated verification. The test suite covers:
-- **Database operations**: Schema extensions and status transitions.
-- **Guardrails**: Safety filtering and intent routing.
-- **Booking logic**: Completeness validation and summary generation.
-- **RAG pipeline behavior**: Correct retrieval and generation flows.
-- **Admin workflow**: End-to-end integration from submission to decision.
-- **Processing and Sync**: Secure export of approved records and duplicate prevention in Stage 3.
+```powershell
+python -m pytest stage_1/tests/ stage_2/tests/ stage_3/tests/
+```
