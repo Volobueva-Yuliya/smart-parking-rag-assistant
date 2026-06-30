@@ -54,44 +54,92 @@ The workflow is defined as a `StateGraph` with the following nodes:
 
 ## Setup and Installation
 
-Ensure all dependencies from all stages are installed:
+Ensure all dependencies from all stages are installed.
+
+**macOS / Linux**
+
 ```bash
 pip install -r requirements.txt
 pip install -r stage_3/requirements.txt
 pip install -r stage_4/requirements.txt
 ```
 
+**Windows**
+
+```powershell
+pip install -r requirements.txt
+pip install -r stage_3\requirements.txt
+pip install -r stage_4\requirements.txt
+```
+
 ## Running the Demo
 
-Run the end-to-end demo to see all scenarios in action:
+Run the end-to-end demo to see all scenarios in action.
+
+**macOS / Linux**
+
 ```bash
-export PYTHONPATH=$(pwd)/smart-parking-rag-assistent
-python3 smart-parking-rag-assistent/stage_4/run_demo.py
+export PYTHONPATH=$(pwd)/smart-parking-rag-assistant
+python3 smart-parking-rag-assistant/stage_4/run_demo.py
+```
+
+**Windows (PowerShell)**
+
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python smart-parking-rag-assistant\stage_4\run_demo.py
 ```
 
 ## Validation
 
 ### Automated End-to-End Validation
-We provide a dedicated validation script that sets up a clean environment, runs an approved flow, and verifies the file export:
+
+We provide a dedicated validation script that sets up a clean environment, runs an approved flow, and verifies the file export.
+
+**macOS / Linux**
+
 ```bash
-export PYTHONPATH=$(pwd)/smart-parking-rag-assistent
-python3 smart-parking-rag-assistent/stage_4/validate_e2e.py
+export PYTHONPATH=$(pwd)/smart-parking-rag-assistant
+python3 smart-parking-rag-assistant/stage_4/validate_e2e.py
+```
+
+**Windows (PowerShell)**
+
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python smart-parking-rag-assistant\stage_4\validate_e2e.py
 ```
 
 ### Manual Inspection
+
 1. Run the demo or validation script.
-2. Check `smart-parking-rag-assistent/stage_3/storage/confirmed_reservations.txt` to see the exported lines.
-3. Verify the format: `Name | Car Number | Reservation Period | Approval Time`.
+2. Check `smart-parking-rag-assistant/stage_3/storage/confirmed_reservations.txt` to see the exported lines.
+3. Verify the format:
+
+```text
+Name | Car Number | Reservation Period | Approval Time
+```
 
 ## Testing
 
-Run the integration and smoke tests:
+Run the integration and smoke tests.
+
+**macOS / Linux**
+
 ```bash
-export PYTHONPATH=$(pwd)/smart-parking-rag-assistent
-python3 -m pytest smart-parking-rag-assistent/stage_4/tests/
+export PYTHONPATH=$(pwd)/smart-parking-rag-assistant
+python3 -m pytest smart-parking-rag-assistant/stage_4/tests/
+```
+
+**Windows (PowerShell)**
+
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python -m pytest smart-parking-rag-assistant\stage_4\tests\
 ```
 
 Tests cover:
+
 - Informational, booking, and greeting paths.
 - Approved vs. rejected outcomes.
 - Stage 3 failure handling.
