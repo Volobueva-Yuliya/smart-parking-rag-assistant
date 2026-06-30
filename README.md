@@ -50,53 +50,136 @@ Stage 4 unifies the project using LangGraph:
 ## Setup
 
 ### 1. Virtual Environment
+
+**macOS / Linux**
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
+**Windows (PowerShell)**
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+**Windows (Command Prompt)**
+
+```cmd
+python -m venv .venv
+.\.venv\Scripts\activate.bat
+```
+
 ### 2. Dependency Installation
+
+**macOS / Linux**
+
 ```bash
-pip install -r smart-parking-rag-assistent/stage_1/requirements.txt
-pip install -r smart-parking-rag-assistent/stage_3/requirements.txt
-pip install -r smart-parking-rag-assistent/stage_4/requirements.txt
+pip install -r smart-parking-rag-assistant/stage_1/requirements.txt
+pip install -r smart-parking-rag-assistant/stage_3/requirements.txt
+pip install -r smart-parking-rag-assistant/stage_4/requirements.txt
+```
+
+**Windows**
+
+```powershell
+pip install -r smart-parking-rag-assistant\stage_1\requirements.txt
+pip install -r smart-parking-rag-assistant\stage_3\requirements.txt
+pip install -r smart-parking-rag-assistant\stage_4\requirements.txt
 ```
 
 ### 3. Database Initialization
+
+**macOS / Linux**
+
 ```bash
-python3 smart-parking-rag-assistent/stage_1/scripts/init_db.py
+python3 smart-parking-rag-assistant/stage_1/scripts/init_db.py
+```
+
+**Windows**
+
+```powershell
+python smart-parking-rag-assistant\stage_1\scripts\init_db.py
 ```
 
 ## Running the Project
 
 ### Full Orchestration Demo (Stage 4)
-This is the recommended way to see the full integrated system:
+
+This is the recommended way to see the full integrated system.
+
+**macOS / Linux**
+
 ```bash
-export PYTHONPATH=$(pwd)/smart-parking-rag-assistent
-python3 smart-parking-rag-assistent/stage_4/run_demo.py
+export PYTHONPATH=$(pwd)/smart-parking-rag-assistant
+python3 smart-parking-rag-assistant/stage_4/run_demo.py
+```
+
+**Windows (PowerShell)**
+
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python smart-parking-rag-assistant\stage_4\run_demo.py
 ```
 
 ### End-to-End Validation
+
+**macOS / Linux**
+
 ```bash
-export PYTHONPATH=$(pwd)/smart-parking-rag-assistent
-python3 smart-parking-rag-assistent/stage_4/validate_e2e.py
+export PYTHONPATH=$(pwd)/smart-parking-rag-assistant
+python3 smart-parking-rag-assistant/stage_4/validate_e2e.py
+```
+
+**Windows (PowerShell)**
+
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python smart-parking-rag-assistant\stage_4\validate_e2e.py
 ```
 
 ## Testing
 
-The project uses **pytest** for automated verification across all stages.
+The project uses `pytest` for automated verification across all stages.
 
-**All tests:**
+### All tests
+
+**macOS / Linux**
+
 ```bash
-export PYTHONPATH=$(pwd)/smart-parking-rag-assistent
-python3 -m pytest smart-parking-rag-assistent/stage_1/tests/ \
-                 smart-parking-rag-assistent/stage_2/tests/ \
-                 smart-parking-rag-assistent/stage_3/tests/ \
-                 smart-parking-rag-assistent/stage_4/tests/
+export PYTHONPATH=$(pwd)/smart-parking-rag-assistant
+python3 -m pytest \
+    smart-parking-rag-assistant/stage_1/tests/ \
+    smart-parking-rag-assistant/stage_2/tests/ \
+    smart-parking-rag-assistant/stage_3/tests/ \
+    smart-parking-rag-assistant/stage_4/tests/
 ```
 
-**Stage 4 specifically:**
+**Windows (PowerShell)**
+
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python -m pytest `
+    smart-parking-rag-assistant\stage_1\tests\ `
+    smart-parking-rag-assistant\stage_2\tests\ `
+    smart-parking-rag-assistant\stage_3\tests\ `
+    smart-parking-rag-assistant\stage_4\tests\
+```
+
+### Stage 4 specifically
+
+**macOS / Linux**
+
 ```bash
-export PYTHONPATH=$(pwd)/smart-parking-rag-assistent
-python3 -m pytest smart-parking-rag-assistent/stage_4/tests/
+export PYTHONPATH=$(pwd)/smart-parking-rag-assistant
+python3 -m pytest smart-parking-rag-assistant/stage_4/tests/
+```
+
+**Windows (PowerShell)**
+
+```powershell
+$env:PYTHONPATH = "$((Get-Location).Path)\smart-parking-rag-assistant"
+python -m pytest smart-parking-rag-assistant\stage_4\tests\
 ```
