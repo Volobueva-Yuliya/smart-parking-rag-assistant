@@ -1,15 +1,9 @@
-# Module 1: Smart Parking RAG Assistant
+# Smart Parking RAG Assistant
 
-This module implements the core RAG (Retrieval-Augmented Generation) pipeline and a terminal-based chatbot for the Smart Parking Assistant.
+A RAG-based chatbot designed for intelligent parking management and information retrieval. The assistant combines semantic question answering with a booking workflow for reservations and availability checks.
 
-## Prerequisites
+## Key Features
 
-<<<<<<< Updated upstream
-- **Python**: 3.9+
-- **OpenAI API Key**: Required for GPT-based responses.
-- **Docker & Docker Compose**: Required for running the Weaviate vector database.
-- **Weaviate**: Vector database instance (started via Docker).
-=======
 - **RAG Pipeline**: Combines efficient retrieval from a knowledge base with LLM-powered generation to provide accurate answers.
 - **Intelligent Booking**: Guided data collection and validation for seamless parking spot reservations.
 - **DB Integration**: Reliable storage for user profiles, parking lot data, and reservations using SQLite.
@@ -17,38 +11,37 @@ This module implements the core RAG (Retrieval-Augmented Generation) pipeline an
 - **Guardrails**: Rule-based safety and filtering mechanisms that block sensitive requests and route user queries correctly.
 
 ## Project Structure
->>>>>>> Stashed changes
 
-## Environment Variables
+```text
+smart-parking-rag-assistant/
+├── stage_1/                # Main development stage
+│   ├── app/                # Application logic
+│   │   ├── chatbot.py      # Chatbot entry point
+│   │   ├── rag_pipeline.py # RAG architecture implementation
+│   │   ├── db.py           # SQLite database operations
+│   │   ├── embeddings.py   # Vector embedding generation
+│   │   ├── guardrails.py   # Intent routing and safety filtering
+│   ├── scripts/            # Infrastructure and setup scripts
+│   │   ├── init_db.py      # SQLite database initialization
+│   │   ├── create_collection.py # Weaviate collection setup
+│   │   ├── ingest_kb.py    # Knowledge base ingestion into Weaviate
+│   ├── data/               # Project knowledge base and datasets
+│   ├── tests/              # Automated test suite
+│   ├── docker-compose.yml  # Local infrastructure orchestration
+│   ├── .env.example        # Configuration template
+│   ├── requirements.txt    # Stage-specific dependencies
+│   └── README.md           # Project documentation
+```
 
-Configure the following environment variables. You can create a `.env` file in this directory or export them in your shell.
+## Installation and Setup
 
-<<<<<<< Updated upstream
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `OPENAI_API_KEY` | Your OpenAI API key | - |
-| `DB_NAME` | Path to the SQLite database | `../../parking.db` |
-| `WEAVIATE_HOST` | Weaviate connection host | `localhost` |
-| `WEAVIATE_PORT` | Weaviate connection port | `8080` |
-=======
 ### 1. Environment Preparation
 
 Create a virtual environment and install dependencies.
 
 **macOS / Linux**
->>>>>>> Stashed changes
 
-### Linux/macOS
 ```bash
-<<<<<<< Updated upstream
-export OPENAI_API_KEY="your-api-key"
-```
-
-### Windows PowerShell
-```powershell
-$env:OPENAI_API_KEY="your-api-key"
-```
-=======
 python3 -m venv venv
 source venv/bin/activate
 pip install -r stage_1/requirements.txt
@@ -75,27 +68,10 @@ pip install -r stage_1\requirements.txt
 Copy the environment variables file and configure your OpenAI API key.
 
 **macOS / Linux**
->>>>>>> Stashed changes
 
-## Installation
-
-### Linux/macOS
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+cp stage_1/.env.example stage_1/.env
 ```
-<<<<<<< Updated upstream
-
-### Windows PowerShell
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
-=======
 
 **Windows (PowerShell)**
 
@@ -116,75 +92,11 @@ Edit `stage_1/.env` and provide your `OPENAI_API_KEY`.
 The RAG pipeline requires a running Weaviate instance. Ensure Weaviate is running locally (default at `localhost:8080`). You can start it using the provided `docker-compose.yml`.
 
 **macOS / Linux**
->>>>>>> Stashed changes
 
-*Note: If PowerShell execution policy blocks activation, run:*
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-```
-
-## Linux/macOS Launch
-
-1. **Start Weaviate**:
-   ```bash
-   docker compose up -d
-   ```
-
-2. **Initialize Database and Vector Store**:
-   ```bash
-   export PYTHONPATH=$PYTHONPATH:$(pwd)/..
-   python3 scripts/init_db.py
-   python3 scripts/create_collection.py
-   python3 scripts/ingest_kb.py
-   ```
-
-3. **Start Chatbot**:
-   ```bash
-   python3 app/chatbot.py
-   ```
-
-## Windows PowerShell Launch
-
-1. **Start Weaviate**:
-   ```powershell
-   docker compose up -d
-   ```
-
-2. **Initialize Database and Vector Store**:
-   ```powershell
-   $env:PYTHONPATH="..;."
-   python scripts/init_db.py
-   python scripts/create_collection.py
-   python scripts/ingest_kb.py
-   ```
-
-3. **Start Chatbot**:
-   ```powershell
-   python app/chatbot.py
-   ```
-
-## How to Run Tests
-
-### Linux/macOS
 ```bash
-PYTHONPATH=.. pytest -v
+docker-compose -f stage_1/docker-compose.yml up -d
 ```
 
-<<<<<<< Updated upstream
-### Windows PowerShell
-```powershell
-$env:PYTHONPATH=".."
-pytest -v
-```
-
-## Troubleshooting (Startup)
-
-- **OpenAI API Key**: Ensure `OPENAI_API_KEY` is set. The bot will fail at startup if missing.
-- **Weaviate Connection**: If scripts fail with connection errors, verify Weaviate is running using `docker ps`.
-- **Import Errors**: If you encounter `ModuleNotFoundError`, ensure your `PYTHONPATH` includes the parent directory as shown in the launch steps.
-- **PowerShell Activation**: Ensure you use `.\.venv\Scripts\Activate.ps1` and have set the correct execution policy.
-- **Missing Database**: Ensure `scripts/init_db.py` is run before the chatbot to create `parking.db`.
-=======
 **Windows**
 
 ```powershell
@@ -313,4 +225,3 @@ graph TD
     SQLite --- Res[Reservations Table]
     SQLite --- Park[Parking Table]
 ```
->>>>>>> Stashed changes
