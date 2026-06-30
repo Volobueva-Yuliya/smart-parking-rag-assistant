@@ -1,12 +1,13 @@
 # Stage 2: Reservation Approval Workflow
 
-This documentation covers **Stage 2** of the smart parking assistant project, which introduces a human-in-the-loop reservation approval system and a second administrative agent.
+This documentation covers Stage 2 of the smart parking assistant project, which introduces a human-in-the-loop reservation approval system and a second administrative agent.
 
 ## Overview
 
-The goal of Stage 2 is to move beyond simple data collection and implement a formal approval process for parking reservations. 
+The goal of Stage 2 is to move beyond simple data collection and implement a formal approval process for parking reservations.
+
 - **Human-in-the-loop workflow**: Reservations are not finalized immediately but require administrative review and decision.
-- **Second Admin Agent**: A dedicated administrative agent built using **LangChain** concepts is introduced to handle approvals and rejections via specialized tools.
+- **Second Admin Agent**: A dedicated administrative agent built using LangChain concepts is introduced to handle approvals and rejections via specialized tools.
 - **Shared Database**: Stage 2 operates on the same SQLite database (`parking.db`) initialized in Stage 1, extending it with approval-specific fields.
 
 ## Key Features
@@ -23,21 +24,51 @@ Stage 2 uses the shared SQLite database located at the repository root: `parking
 
 ### Setup Sequence
 
-1. **Initialize Base Schema** (from Stage 1):
-   ```bash
-   python3 -m stage_1.scripts.init_db
-   ```
+#### 1. Initialize Base Schema (from Stage 1)
 
-2. **Extend Schema for Stage 2**:
-   Stage 2 requires additional columns for the approval workflow: `updated_at`, `admin_decision_at`, and `admin_comment`. These are added dynamically if they do not exist.
-   
-   Run this Python snippet to ensure the schema is up to date:
-   ```python
-   from stage_2.db import ensure_stage_2_columns
-   ensure_stage_2_columns()
-   ```
+**macOS / Linux**
 
-> **Note**: Adding missing columns to an existing SQLite table is the expected lightweight schema extension method for this stage.
+```bash
+python3 -m stage_1.scripts.init_db
+```
+
+**Windows**
+
+```powershell
+python -m stage_1.scripts.init_db
+```
+
+#### 2. Extend Schema for Stage 2
+
+Stage 2 requires additional columns for the approval workflow: `updated_at`, `admin_decision_at`, and `admin_comment`. These are added dynamically if they do not exist.
+
+Run the following commands:
+
+**macOS / Linux**
+
+```bash
+python3
+```
+
+```python
+from stage_2.db import ensure_stage_2_columns
+ensure_stage_2_columns()
+```
+
+**Windows**
+
+```powershell
+python
+```
+
+```python
+from stage_2.db import ensure_stage_2_columns
+ensure_stage_2_columns()
+```
+
+> **Note:** Adding missing columns to an existing SQLite table is the expected lightweight schema extension method for this stage.
+
+---
 
 ## Project Structure (Stage 2)
 
@@ -57,11 +88,11 @@ smart-parking-rag-assistant/
 
 ## Architecture (Stage 2)
 
-- **`chatbot_flow` / `booking_flow`**: Handles user interaction, data validation (non-empty fields), and the finalization of the reservation after user confirmation.
-- **`admin_client`**: An abstraction layer (currently a stub) responsible for forwarding reservation requests to the administrative side.
-- **`admin_api`**: A FastAPI application providing endpoints for administrators to fetch reservations and submit `approved` or `rejected` decisions.
-- **`admin_agent`**: A second agent using LangChain tools (`approve_reservation`, `reject_reservation`) to execute administrative actions.
-- **`SQLite Database`**: The central storage for all reservations, updated with timestamps and administrative comments during the lifecycle.
+- **chatbot_flow / booking_flow**: Handles user interaction, data validation (non-empty fields), and the finalization of the reservation after user confirmation.
+- **admin_client**: An abstraction layer (currently a stub) responsible for forwarding reservation requests to the administrative side.
+- **admin_api**: A FastAPI application providing endpoints for administrators to fetch reservations and submit approved or rejected decisions.
+- **admin_agent**: A second agent using LangChain tools (`approve_reservation`, `reject_reservation`) to execute administrative actions.
+- **SQLite Database**: The central storage for all reservations, updated with timestamps and administrative comments during the lifecycle.
 
 ## Reservation Workflow
 
@@ -76,19 +107,54 @@ smart-parking-rag-assistant/
 ## Running Stage 2
 
 ### Start Admin API
-Ensure your `PYTHONPATH` includes the project root:
+
+Ensure your `PYTHONPATH` includes the project root.
+
+**macOS / Linux**
+
 ```bash
 python3 -m uvicorn stage_2.admin_api:app --reload
 ```
 
+**Windows**
+
+```powershell
+python -m uvicorn stage_2.admin_api:app --reload
+```
+
 ### Run Stage 2 Tests
+
+**macOS / Linux**
+
 ```bash
 python3 -m pytest stage_2/tests/ -q
 ```
 
+**Windows**
+
+```powershell
+python -m pytest stage_2/tests/ -q
+```
+
 ## Example Flow
 
-1. **Booking**: User confirms booking for "Lila Ivanova, SDS-100".
-2. **Pending**: Reservation `R-20260401-001` created as `pending_admin_approval`.
-3. **Approval**: Admin calls API `POST /admin/reservation/R-20260401-001/decision` with `{"decision": "approved", "comment": "Spot confirmed"}`.
-4. **Status Check**: User checks status and receives: "Great news! Your reservation has been approved. Admin note: Spot confirmed".
+1. **Booking:** User confirms booking for **"Lila Ivanova, SDS-100"**.
+2. **Pending:** Reservation `R-20260401-001` is created with status `pending_admin_approval`.
+3. **Approval:** Admin calls the API:
+
+```http
+POST /admin/reservation/R-20260401-001/decision
+```
+
+with the payload:
+
+```json
+{
+  "decision": "approved",
+  "comment": "Spot confirmed"
+}
+```
+
+4. **Status Check:** The user checks the reservation status and receives:
+
+> **Great news! Your reservation has been approved. Admin note: Spot confirmed.**
